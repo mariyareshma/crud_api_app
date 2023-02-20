@@ -39,68 +39,77 @@ class AddEditPersonState extends State<AddEditPerson> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      child: Column(children: [
-        getTitle(),
-        getName(),
-        getAge(),
-        Row(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            ElevatedButton(
-                onPressed: () {
-                  var name = nameControler.text;
-                  var age = int.parse(ageControler.text);
+            getTitle(),
+            getName(),
+            getAge(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        var nametxt = nameControler.text;
+                        var ageNum = int.parse(ageControler.text);
 
-                  var personObj = PersonDetails(
-                    name: name,
-                    age: age,
-                  );
-                  if (widget.person != null) {
-                    widget.person!.id = widget.person!.id;
-                  }
+                        var personObj = PersonDetails(
+                          name: nametxt,
+                          age: ageNum,
+                        );
+                        if (widget.person != null) {
+                          personObj.id = widget.person!.id;
+                        }
 
-                  Navigator.pop(context, personObj);
-                },
-                child: const Text('Ok')),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Cancel'))
-          ],
-        )
-      ]),
+                        Navigator.pop(context, personObj);
+                      },
+                      child: const Text('Ok')),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel'))
+                ],
+              ),
+            )
+          ]),
     );
   }
 
   TextFormField getAge() {
     return TextFormField(
+      keyboardType: TextInputType.number,
       validator: validateNumber,
       decoration: const InputDecoration(
           icon: Icon(Icons.person),
           labelText: 'Enter Person Age',
           hintText: 'Person Age'),
-      controller: nameControler,
+      controller: ageControler,
     );
   }
 
   TextFormField getName() {
     return TextFormField(
+      keyboardType: TextInputType.name,
       validator: validateNumber,
       decoration: const InputDecoration(
           icon: Icon(Icons.subject_outlined),
           labelText: 'Enter name',
           hintText: 'Name'),
-      controller: ageControler,
-      keyboardType: TextInputType.number,
+      controller: nameControler,
     );
   }
 
-  Row getTitle() {
+  getTitle() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
           child: Container(
-              color: Colors.red,
+              color: Theme.of(context).primaryColor,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Center(
