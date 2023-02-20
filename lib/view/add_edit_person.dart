@@ -14,7 +14,6 @@ class AddEditPersonState extends State<AddEditPerson> {
   final formkey = GlobalKey<FormState>();
   TextEditingController nameControler = TextEditingController();
   TextEditingController ageControler = TextEditingController();
-  TextEditingController idController = TextEditingController();
 
   @override
   void initState() {
@@ -22,7 +21,6 @@ class AddEditPersonState extends State<AddEditPerson> {
     if (widget.person != null) {
       nameControler.text = widget.person!.name!;
       ageControler.text = widget.person!.age.toString();
-      idController.text = widget.person!.id!;
     }
   }
 
@@ -32,7 +30,7 @@ class AddEditPersonState extends State<AddEditPerson> {
     }
 
     var valueOfAge = int.parse(value);
-    if (valueOfAge < 0 || valueOfAge > 200) {
+    if (valueOfAge < 0 || valueOfAge > 100) {
       return 'Please enter valid number';
     }
     return null;
@@ -56,6 +54,9 @@ class AddEditPersonState extends State<AddEditPerson> {
                     name: name,
                     age: age,
                   );
+                  if (widget.person != null) {
+                    widget.person!.id = widget.person!.id;
+                  }
 
                   Navigator.pop(context, personObj);
                 },
