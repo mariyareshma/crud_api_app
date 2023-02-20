@@ -1,5 +1,5 @@
 import 'package:crud_api_app/model/person_model.dart';
-import 'package:crud_api_app/view/personWidget.dart';
+import 'package:crud_api_app/view/person_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../service/person_service.dart';
@@ -25,21 +25,48 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<bool?> showDeleteOption() async {
+    return await showDialog<bool?>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Confirm:'),
+            content: const Text("Are you sure you want to delete the person "),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                child: const Text('Yes'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                child: const Text("No"),
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Crud App')),
-        body: getBody(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            //add
-            var person = await showPersonAddEditDialog(null);
-            if (person != null) {
-              await addPerson(person);
-              setState(() {});
-            }
-          },
-        ));
+      appBar: AppBar(title: const Text('Crud App')),
+      body: getBody(),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () async {
+          //add
+          var person = await showPersonAddEditDialog(null);
+          if (person != null) {
+            await addPerson(person);
+            setState(() {});
+          }
+        },
+      ),
+    );
   }
 
   Widget getBody() {
@@ -68,6 +95,13 @@ class _HomePageState extends State<HomePage> {
     var widgets = <Widget>[];
     for (var person in persons) {
       var widget = GestureDetector(
+        onLongPress: () async {
+          var canDelete = await showDeleteOption();
+          if (canDelete!) {
+            await deletePerson(person);
+            setState(() {});
+          }
+        },
         onTap: () async {
           var newPerson = await showPersonAddEditDialog(person);
           if (newPerson != null) {
